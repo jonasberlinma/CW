@@ -47,7 +47,7 @@ public class CW {
                 dit(line);
             } else if (code.charAt(i) == '-') {
                 da(line);
-            } else { 
+            } else if (code.charAt(i) == ' ') {
                 play(line, Note.WORD_REST, (int) (50 * tempo)); 
             }
         }
