@@ -6,6 +6,7 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
+import java.util.Arrays;
 
 public class CW {
 
@@ -21,10 +22,9 @@ public class CW {
          {"7", "--..."}, {"8", "---.."}, {"9", "----."}, {".", ".-.-.-"}, {",", "--..--"}, {"?", "..--.."}, {"!", "-.-.--"}};
         for (String[] code : codes) {
             letters.put(code[0], code[1]);
-        }  
+        }       
 
-  
-        String message = "How the phuck are you doing today?";
+        String message = "the quick brown fox jumps over the lazy dog. 0123456789.,?!";
 
         playLetter(" ");
         for (int i = 0; i < message.length(); i++) {
@@ -38,10 +38,11 @@ public class CW {
         new AudioFormat(Note.SAMPLE_RATE, 8, 1, true, true);
         SourceDataLine line = AudioSystem.getSourceDataLine(af);
 
-    line.open(af, Note.SAMPLE_RATE);
-    line.start();
+        line.open(af, Note.SAMPLE_RATE);
+        line.start();
         String code = letters.get(letter);  
         System.out.println(" " + letter + " " + code);
+
         for (int i = 0; i < code.length(); i++) {
             if (code.charAt(i) == '.') {
                 dit(line);
@@ -68,7 +69,21 @@ public class CW {
     private static void play(SourceDataLine line, Note note, int ms) {
         ms = Math.min(ms, Note.SECONDS * 1000);
         int length = Note.SAMPLE_RATE * ms / 1000;
-        line.write(note.data(), 0, length);
+        int cutoff_length = length;
+        for(int i = length - 1; i > 0; i-- ){
+            if(Math.abs((int)(note.data()[i])) < 10){
+                cutoff_length = i;
+                break;
+            }
+        }
+        int sgn = (int)(note.data()[cutoff_length - 1]) < 0 ? -1 : 1;
+        int final_length = cutoff_length + Math.abs((int)(note.data()[cutoff_length - 1]));
+
+        byte[] buffer = Arrays.copyOfRange(note.data(), 0, final_length);
+        for(int i = cutoff_length; i < final_length; i++ ){
+            buffer[i] = (byte)(Math.abs(final_length - i) * sgn);
+        }
+        line.write(buffer, 0, buffer.length - 1);
     }
 
 enum Note {
