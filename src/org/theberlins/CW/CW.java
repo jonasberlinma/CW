@@ -24,7 +24,7 @@ public class CW {
             letters.put(code[0], code[1]);
         }       
 
-        String message = "the quick brown fox jumps over the lazy dog. 0123456789.,?!";
+        String message = "the quick brown fox jumps over the lazy dog 1234567890 .,?!";
 
         playLetter(" ");
         for (int i = 0; i < message.length(); i++) {
