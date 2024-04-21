@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 public class CW {
 
-    public static int takt = 80;
+    public static int takt = 40;
     public static double tempo = 320 / takt;
     public static HashMap<String, String> letters = new HashMap<String, String>();
     public static void main(String[] args) throws LineUnavailableException {
@@ -24,7 +24,7 @@ public class CW {
             letters.put(code[0], code[1]);
         }       
 
-        String message = "the quick brown fox jumps over the lazy dog 1234567890 .,?!";
+        String message = "cq cq cq";
 
         playLetter(" ");
         for (int i = 0; i < message.length(); i++) {
@@ -69,21 +69,8 @@ public class CW {
     private static void play(SourceDataLine line, Note note, int ms) {
         ms = Math.min(ms, Note.SECONDS * 1000);
         int length = Note.SAMPLE_RATE * ms / 1000;
-        int cutoff_length = length;
-        for(int i = length - 1; i > 0; i-- ){
-            if(Math.abs((int)(note.data()[i])) < 10){
-                cutoff_length = i;
-                break;
-            }
-        }
-        int sgn = (int)(note.data()[cutoff_length - 1]) < 0 ? -1 : 1;
-        int final_length = cutoff_length + Math.abs((int)(note.data()[cutoff_length - 1]));
-
-        byte[] buffer = Arrays.copyOfRange(note.data(), 0, final_length);
-        for(int i = cutoff_length; i < final_length; i++ ){
-            buffer[i] = (byte)(Math.abs(final_length - i) * sgn);
-        }
-        line.write(buffer, 0, buffer.length - 1);
+ 
+        line.write(note.data(), 0, length - 1);
     }
 
 enum Note {
@@ -98,17 +85,7 @@ enum Note {
         double f = 440d;
         double period = (double)SAMPLE_RATE / f;
         switch(n){
-            case 0:
-                for (int i = 0; i < sin.length; i++) {
-                    sin[i] = 0;
-                }
-                break;
-            case 1:
-                for (int i = 0; i < sin.length; i++) {
-                    sin[i] = 0;
-                }
-                break;
-            case 2:
+            case 0, 1, 2:
                 for (int i = 0; i < sin.length; i++) {
                     sin[i] = 0;
                 }
