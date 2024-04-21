@@ -7,11 +7,14 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import java.util.Arrays;
+import java.util.Random;
 
 public class CW {
 
     public static int takt = 40;
     public static double tempo = 320 / takt;
+    public static double noiseLevel = 10;
+    public static String message = "the quick brown fox jumps over the lazy dog. 0123456789.,?!";
     public static HashMap<String, String> letters = new HashMap<String, String>();
     public static void main(String[] args) throws LineUnavailableException {
         String[][] codes = {{" ", " "}, {"a", ".-"}, {"b", "-..."}, {"c", "-.-."}, {"d", "-.."}, {"e", "."}, 
@@ -23,8 +26,6 @@ public class CW {
         for (String[] code : codes) {
             letters.put(code[0], code[1]);
         }       
-
-        String message = "cq cq cq";
 
         playLetter(" ");
         for (int i = 0; i < message.length(); i++) {
@@ -69,9 +70,9 @@ public class CW {
     private static void play(SourceDataLine line, Note note, int ms) {
         ms = Math.min(ms, Note.SECONDS * 1000);
         int length = Note.SAMPLE_RATE * ms / 1000;
- 
         line.write(note.data(), 0, length - 1);
     }
+
 
 enum Note {
 
@@ -102,9 +103,16 @@ enum Note {
                 sin[i] = (byte)(Math.sin(angle)  * 127f) ;
                 }
             }
+        addNoise(sin, sin.length);
         } 
         byte[] data(){
             return sin;
+        }
+        private static void addNoise(byte[] data, int length){
+            Random random = new Random();
+           for (int i = 0; i < length; i++) {
+               data[i] = (byte)(data[i] + (byte)(random.nextGaussian() * noiseLevel - noiseLevel / 2));
+           } 
         }
     }
 }
