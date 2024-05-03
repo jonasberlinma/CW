@@ -37,7 +37,6 @@ public class CW {
         for (int i = 0; i < message.length(); i++) {
             playLetter(message.substring(i, i + 1).toLowerCase());
         }
-
     }
 
     public static void playLetter(String letter) throws LineUnavailableException {
@@ -57,7 +56,7 @@ public class CW {
                 play(line, Note.TONE, 3 * unit);
                 play(line, Note.REST, unit);
             } else if (code.charAt(i) == ' ') {
-                play(line, Note.REST, 7 * unit);
+                play(line, Note.REST, 4 * unit);
             }
         }
         play(line, Note.REST, 3 * unit);
