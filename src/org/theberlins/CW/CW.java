@@ -51,26 +51,18 @@ public class CW {
 
         for (int i = 0; i < code.length(); i++) {
             if (code.charAt(i) == '.') {
-                dit(line);
+                play(line, Note.TONE, unit);
+                play(line, Note.REST, unit);
             } else if (code.charAt(i) == '-') {
-                da(line);
+                play(line, Note.TONE, 3 * unit);
+                play(line, Note.REST, unit);
             } else if (code.charAt(i) == ' ') {
-                play(line, Note.REST, 6 * unit);
+                play(line, Note.REST, 7 * unit);
             }
         }
-        play(line, Note.REST, 2 * unit);
+        play(line, Note.REST, 3 * unit);
         line.drain();
         line.close();
-    }
-
-    public static void da(SourceDataLine line) {
-        play(line, Note.TONE, 3 * unit);
-        play(line, Note.REST, unit);
-    }
-
-    public static void dit(SourceDataLine line) {
-        play(line, Note.TONE, unit);
-        play(line, Note.REST, unit);
     }
 
     private static void play(SourceDataLine line, Note note, int ms) {
