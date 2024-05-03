@@ -12,6 +12,7 @@ public class CW {
 
     public static int takt = 80;
     public static double tempo = 350 / takt;
+    public static int unit = ((int)(tempo * 16));
     public static double noiseLevel = 20;
     public static String message = "the quick brown fox jumps over the lazy dog. 0123456789.,?!";
     public static HashMap<String, String> letters = new HashMap<String, String>();
@@ -54,22 +55,22 @@ public class CW {
             } else if (code.charAt(i) == '-') {
                 da(line);
             } else if (code.charAt(i) == ' ') {
-                play(line, Note.WORD_REST, (int) (112 * tempo));
+                play(line, Note.REST, 6 * unit);
             }
         }
-        play(line, Note.CHARACTER_REST, (int) (48 * tempo));
+        play(line, Note.REST, 2 * unit);
         line.drain();
         line.close();
     }
 
     public static void da(SourceDataLine line) {
-        play(line, Note.DA, (int) (48 * tempo));
-        play(line, Note.TONE_REST, (int) (16 * tempo));
+        play(line, Note.TONE, 3 * unit);
+        play(line, Note.REST, unit);
     }
 
     public static void dit(SourceDataLine line) {
-        play(line, Note.DIT, (int) (16 * tempo));
-        play(line, Note.TONE_REST, (int) (16 * tempo));
+        play(line, Note.TONE, unit);
+        play(line, Note.REST, unit);
     }
 
     private static void play(SourceDataLine line, Note note, int ms) {
@@ -80,7 +81,7 @@ public class CW {
 
     enum Note {
 
-        TONE_REST, CHARACTER_REST, WORD_REST, DA, DIT;
+        REST, TONE;
 
         public static final int SAMPLE_RATE = 16 * 1024; // ~16KHz
         public static final int SECONDS = 2;
@@ -91,12 +92,12 @@ public class CW {
             double f = 440d;
             double period = (double) SAMPLE_RATE / f;
             switch (n) {
-                case 0, 1, 2:
+                case 0:
                     for (int i = 0; i < sin.length; i++) {
                         sin[i] = 0;
                     }
                     break;
-                case 3, 4: // DA and DIT
+                case 1: // Tone
                     for (int i = 0; i < sin.length; i++) {
                         double angle = 2.0 * Math.PI * i / period;
                         sin[i] = (byte) (Math.sin(angle) * 127f);
