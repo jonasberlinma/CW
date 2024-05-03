@@ -1,4 +1,4 @@
-package org.theberlins.cw;
+package org.theberlins.CW;
 
 import java.util.HashMap;
 
@@ -6,14 +6,13 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
-import java.util.Arrays;
 import java.util.Random;
 
 public class CW {
 
-    public static int takt = 100;
-    public static double tempo = 320 / takt;
-    public static double noiseLevel = 10;
+    public static int takt = 80;
+    public static double tempo = 350 / takt;
+    public static double noiseLevel = 20;
     public static String message = "the quick brown fox jumps over the lazy dog. 0123456789.,?!";
     public static HashMap<String, String> letters = new HashMap<String, String>();
 
@@ -55,16 +54,16 @@ public class CW {
             } else if (code.charAt(i) == '-') {
                 da(line);
             } else if (code.charAt(i) == ' ') {
-                play(line, Note.WORD_REST, (int) (50 * tempo));
+                play(line, Note.WORD_REST, (int) (112 * tempo));
             }
         }
-        play(line, Note.CHARACTER_REST, (int) (16 * tempo));
+        play(line, Note.CHARACTER_REST, (int) (48 * tempo));
         line.drain();
         line.close();
     }
 
     public static void da(SourceDataLine line) {
-        play(line, Note.DA, (int) (50 * tempo));
+        play(line, Note.DA, (int) (48 * tempo));
         play(line, Note.TONE_REST, (int) (16 * tempo));
     }
 
