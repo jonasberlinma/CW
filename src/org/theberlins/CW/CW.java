@@ -37,6 +37,7 @@ public class CW {
         for (int i = 0; i < message.length(); i++) {
             playLetter(message.substring(i, i + 1).toLowerCase());
         }
+        System.exit(0);
     }
 
     public static void playLetter(String letter) throws LineUnavailableException {
@@ -105,7 +106,7 @@ public class CW {
         private static void addNoise(byte[] data) {
             Random random = new Random();
             for (int i = 0; i < data.length; i++) {
-                data[i] = (byte) (data[i] + (byte) (random.nextGaussian() * noiseLevel));
+                data[i] = (byte) ((data[i] + (byte) (random.nextGaussian() * noiseLevel))/(1+noiseLevel/100));
             }
         }
     }
